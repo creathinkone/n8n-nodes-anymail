@@ -24,6 +24,10 @@ export const EVENTS: Array<[string, string, string]> = [
 	['prospect_added', 'New Prospect', 'A prospect is created in the app, by import or through the API'],
 	['campaign_paused', 'Campaign Paused', 'A campaign is paused'],
 	['campaign_completed', 'Campaign Completed', 'A campaign ends'],
+	['offer_opened', 'Offer Opened', 'A recipient opens an offer for the first time'],
+	['offer_returned', 'Offer Revisited', 'A recipient comes back to an offer'],
+	['offer_read', 'Offer Read', 'A recipient reads an offer to the end. Fires once per offer'],
+	['offer_temperature_changed', 'Offer Temperature Changed', 'An offer moves between hot, warm, neutral, cooling and cold'],
 ];
 
 export class AnymailTrigger implements INodeType {

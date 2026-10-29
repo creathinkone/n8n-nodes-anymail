@@ -33,7 +33,7 @@ test('package wiring', () => {
 	assert.deepEqual(pkg.dependencies ?? {}, {});
 	assert.equal(new AnymailApi().test.request.url, '/workspaces');
 	assert.equal(new Anymail().description.properties[0].options.length, 3);
-	assert.equal(EVENTS.length, 12);
+	assert.equal(EVENTS.length, 16);
 });
 
 test('upsert creates a new prospect in a campaign', async () => {
