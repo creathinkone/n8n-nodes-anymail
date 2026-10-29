@@ -6,6 +6,7 @@ import type {
 	IWebhookFunctions,
 	IWebhookResponseData,
 } from 'n8n-workflow';
+import { NodeConnectionTypes } from 'n8n-workflow';
 import { api } from '../Anymail/Anymail.node';
 
 // Mirrors ZAPIER_HOOK_EVENTS in the anymail app (src/lib/webhooks/zapier-hook-events.ts).
@@ -29,14 +30,14 @@ export class AnymailTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'anymail Trigger',
 		name: 'anymailTrigger',
-		icon: 'file:anymail.svg',
+		icon: { light: 'file:anymail.svg', dark: 'file:anymail-dark.svg' },
 		group: ['trigger'],
 		version: 1,
 		subtitle: '={{$parameter["event"]}}',
 		description: 'Starts a workflow when something happens in anymail',
 		defaults: { name: 'anymail Trigger' },
 		inputs: [],
-		outputs: ['main'],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'anymailApi', required: true }],
 		webhooks: [{ name: 'default', httpMethod: 'POST', responseMode: 'onReceived', path: 'webhook' }],
 		properties: [

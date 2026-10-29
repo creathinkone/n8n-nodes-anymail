@@ -2,7 +2,8 @@ import type { IAuthenticateGeneric, ICredentialTestRequest, ICredentialType, INo
 
 export class AnymailApi implements ICredentialType {
 	name = 'anymailApi';
-	displayName = 'anymail API';
+	displayName = 'Anymail API';
+	icon = { light: 'file:anymail.svg', dark: 'file:anymail-dark.svg' } as const;
 	documentationUrl = 'https://developers.anymail.watch/n8n/';
 	properties: INodeProperties[] = [
 		{

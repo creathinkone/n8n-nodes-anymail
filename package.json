@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-anymail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community nodes for anymail (cold email): prospects, campaigns, suppressions and instant triggers for replies, bounces and clicks.",
   "keywords": ["n8n-community-node-package", "anymail", "cold-email", "outreach"],
   "license": "MIT",
@@ -9,7 +9,7 @@
   "repository": { "type": "git", "url": "git+https://github.com/creathinkone/n8n-nodes-anymail.git" },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cp nodes/Anymail/anymail.svg dist/nodes/Anymail/ && cp nodes/AnymailTrigger/anymail.svg dist/nodes/AnymailTrigger/",
+    "build": "tsc && cp nodes/Anymail/*.svg dist/nodes/Anymail/ && cp nodes/AnymailTrigger/*.svg dist/nodes/AnymailTrigger/ && cp credentials/*.svg dist/credentials/",
     "test": "npm run build && node --test test/nodes.test.js",
     "prepublishOnly": "npm run build"
   },

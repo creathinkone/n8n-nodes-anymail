@@ -10,7 +10,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeApiError, NodeOperationError } from 'n8n-workflow';
+import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 type Ctx = IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions;
 
@@ -68,14 +68,14 @@ export class Anymail implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'anymail',
 		name: 'anymail',
-		icon: 'file:anymail.svg',
+		icon: { light: 'file:anymail.svg', dark: 'file:anymail-dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description: 'Manage prospects, campaigns and suppressions in anymail',
 		defaults: { name: 'anymail' },
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		usableAsTool: true,
 		credentials: [{ name: 'anymailApi', required: true }],
 		properties: [
@@ -99,7 +99,7 @@ export class Anymail implements INodeType {
 				default: 'upsert',
 				displayOptions: { show: { resource: ['prospect'] } },
 				options: [
-					{ name: 'Create or Update', value: 'upsert', action: 'Create or update a prospect', description: 'Create a prospect, or update the one with the same email' },
+					{ name: 'Create or Update', value: 'upsert', action: 'Create or update a prospect', description: 'Create a new record, or update the current one if it already exists (upsert)' },
 					{ name: 'Get by Email', value: 'getByEmail', action: 'Get a prospect by email', description: 'Return the prospect with this email, or nothing' },
 					{ name: 'Search', value: 'search', action: 'Search prospects', description: 'List prospects, optionally filtered by email' },
 				],
@@ -175,6 +175,7 @@ export class Anymail implements INodeType {
 				type: 'number',
 				typeOptions: { minValue: 1, maxValue: 100 },
 				default: 50,
+				description: 'Max number of results to return',
 				displayOptions: { show: { resource: ['prospect'], operation: ['search'] } },
 			},
 			campaignIdField('campaign', ['addProspect', 'start', 'pause', 'resume', 'stop'], true),
@@ -271,7 +272,8 @@ export class Anymail implements INodeType {
 					out.push({ json: { error: (error as Error).message }, pairedItem: { item: i } });
 					continue;
 				}
-				throw error;
+				if (error instanceof NodeApiError || error instanceof NodeOperationError) throw error;
+				throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
 			}
 		}
 		return [out];
