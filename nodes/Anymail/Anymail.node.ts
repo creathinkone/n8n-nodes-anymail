@@ -53,11 +53,11 @@ export function mergeProspect(existing: IDataObject, input: IDataObject): IDataO
 	};
 }
 
-const campaignIdField = (resource: string, operations: string[], required: boolean) => ({
+const campaignIdField = (resource: string, operations: string[], required: boolean, loader = 'getCampaigns') => ({
 	displayName: 'Campaign',
 	name: 'campaignId',
 	type: 'options' as const,
-	typeOptions: { loadOptionsMethod: 'getCampaigns' },
+	typeOptions: { loadOptionsMethod: loader },
 	default: '',
 	required,
 	description: 'Choose from the list, or use an expression with a campaign ID',
@@ -161,7 +161,7 @@ export class Anymail implements INodeType {
 					{ displayName: 'Time Zone', name: 'timezone', type: 'string', default: '', placeholder: 'Europe/Warsaw', description: 'IANA name' },
 				],
 			},
-			{ ...campaignIdField('prospect', ['upsert'], false), displayName: 'Add to Campaign', description: 'Optional. Enrol the prospect in this campaign. Choose from the list, or use an expression with a campaign ID' },
+			{ ...campaignIdField('prospect', ['upsert'], false, 'getCampaignsOptional'), displayName: 'Add to Campaign', description: 'Optional. Enrol the prospect in this campaign. Choose from the list, or use an expression with a campaign ID' },
 			{
 				displayName: 'Email Filter',
 				name: 'emailFilter',
@@ -196,6 +196,12 @@ export class Anymail implements INodeType {
 			async getCampaigns(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const { body } = await api(this, 'GET', '/campaigns', undefined, { limit: 100 });
 				return ((body.data as IDataObject[]) || []).map((c) => ({ name: `${c.name} (${c.status})`, value: String(c.id) }));
+			},
+			// An optional field needs an empty entry, or n8n flags its '' default as an invalid value.
+			async getCampaignsOptional(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const { body } = await api(this, 'GET', '/campaigns', undefined, { limit: 100 });
+				const list = ((body.data as IDataObject[]) || []).map((c) => ({ name: `${c.name} (${c.status})`, value: String(c.id) }));
+				return [{ name: 'None', value: '' }, ...list];
 			},
 		},
 	};
