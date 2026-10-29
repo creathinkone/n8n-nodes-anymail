@@ -1,0 +1,29 @@
+{
+  "name": "n8n-nodes-anymail",
+  "version": "0.1.0",
+  "description": "n8n community nodes for anymail (cold email): prospects, campaigns, suppressions and instant triggers for replies, bounces and clicks.",
+  "keywords": ["n8n-community-node-package", "anymail", "cold-email", "outreach"],
+  "license": "MIT",
+  "homepage": "https://developers.anymail.watch/n8n/",
+  "author": { "name": "Creathink", "email": "support@anymail.watch" },
+  "repository": { "type": "git", "url": "git+https://github.com/creathinkone/n8n-nodes-anymail.git" },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && cp nodes/Anymail/anymail.svg dist/nodes/Anymail/ && cp nodes/AnymailTrigger/anymail.svg dist/nodes/AnymailTrigger/",
+    "test": "npm run build && node --test test/nodes.test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": ["dist"],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": ["dist/credentials/AnymailApi.credentials.js"],
+    "nodes": ["dist/nodes/Anymail/Anymail.node.js", "dist/nodes/AnymailTrigger/AnymailTrigger.node.js"]
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "n8n-workflow": "^1.82.0",
+    "typescript": "^5.6.0"
+  },
+  "peerDependencies": { "n8n-workflow": "*" }
+}
